@@ -6,7 +6,7 @@ async function scrapeData() {
   const page = await browser.newPage();
 
   // 試合結果ページにアクセス
-  const url = "https://npb.jp/scores/2022/0325/h-f-01/";
+  const url = "https://npb.jp/scores/2022/0325/h-f-01/box.html";
   await page.goto(url, { waitUntil: "load" });
 
   // セレクタが見つかるまで待つ
