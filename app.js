@@ -1,13 +1,108 @@
 const puppeteer = require("puppeteer");
 
-const scrapeData = async () => {
-  // Puppeteerでブラウザを起動
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+const scrapeData = async (teamName, dateStr) => {
+  const teamShortNames = {
+    日本ハム: "f",
+    ソフトバンク: "h",
+    オリックス: "b",
+    楽天: "e",
+    西武: "l",
+    ロッテ: "m",
+    巨人: "g",
+    阪神: "t",
+    中日: "d",
+    広島: "c",
+    DeNA: "db",
+    ヤクルト: "s",
+  };
 
-  // 試合結果ページにアクセス
-  const url = "https://npb.jp/scores/2022/0325/h-f-01/box.html";
-  await page.goto(url, { waitUntil: "load" });
+  const buildUrl = async (teamName, dateStr) => {
+    const featuredTeam = teamShortNames[teamName];
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const yyyymmdd = `${month}${day}`;
+
+    const gameListUrl = `https://npb.jp/scores/${year}/${yyyymmdd}/`;
+
+    const opponents = Object.values(teamShortNames).filter(
+      (t) => t !== featuredTeam
+    );
+    const gameNums = Array.from({ length: 25 }, (_, i) =>
+      String(i + 1).padStart(2, "0")
+    );
+
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+
+    const tryUrl = async (url) => {
+      try {
+        const res = await page.goto(url, {
+          waitUntil: "domcontentloaded",
+          timeout: 5000,
+        });
+        if (res.status() === 200) {
+          return true;
+        }
+      } catch (err) {
+        return false;
+      }
+    };
+
+    if (parseInt(month) === 6) {
+      for (const opp of opponents) {
+        for (const num of gameNums) {
+          let testUrl = `${gameListUrl}/${featuredTeam}-${opp}-${num}/box.html`;
+          let isUrlValid = await tryUrl(testUrl);
+          if (isUrlValid) {
+            console.log(testUrl);
+            return { browser, page };
+          } else {
+          }
+          testUrl = `${gameListUrl}/${opp}-${featuredTeam}-${num}/box.html`;
+          isUrlValid = await tryUrl(testUrl);
+          if (isUrlValid) {
+            console.log(testUrl);
+            return { browser, page };
+          } else {
+          }
+        }
+      }
+    } else {
+      for (const opp of opponents) {
+        for (const num of gameNums) {
+          let testUrl = `${gameListUrl}/${featuredTeam}-${opp}-${num}/box.html`;
+          let isUrlValid = await tryUrl(testUrl);
+          if (isUrlValid) {
+            console.log(testUrl);
+            return { browser, page };
+          } else {
+            console.log(testUrl);
+          }
+          testUrl = `${gameListUrl}/${opp}-${featuredTeam}-${num}/box.html`;
+          isUrlValid = await tryUrl(testUrl);
+          if (isUrlValid) {
+            console.log(testUrl);
+            return { browser, page };
+          } else {
+          }
+        }
+      }
+    }
+    await browser.close();
+    throw new Error("有効な試合ページが見つかりませんでした");
+  };
+
+  const { browser, page } = await buildUrl("日本ハム", "2024-06-05");
+
+  // // Puppeteerでブラウザを起動
+  // const browser = await puppeteer.launch({ headless: true });
+  // const page = await browser.newPage();
+
+  // // 試合結果ページにアクセス
+  // const url = "https://npb.jp/scores/2022/0325/h-f-01/box.html";
+  // await page.goto(url, { waitUntil: "load" });
 
   // セレクタが見つかるまで待つ
   await page.waitForSelector("#tablefix_t_b");
@@ -20,8 +115,10 @@ const scrapeData = async () => {
     })
   );
 
+  // 個人成績の記録
   const cumulativeStats = {};
 
+  // 読み込んだデータの成形
   const convertRowToPlayer = (row) => {
     const [no, pos, name, atBats, runs, hits, rbi, steals, ...results] = row;
 
@@ -39,6 +136,7 @@ const scrapeData = async () => {
     };
   };
 
+  // 個人成績の記録,加算
   const addPlayerStats = (cumulative, player) => {
     const name = player.name;
     if (!cumulative[name]) {
