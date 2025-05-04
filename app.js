@@ -9,15 +9,19 @@ async function scrapeData() {
   const url = "https://npb.jp/scores/2022/0325/h-f-01/";
   await page.goto(url, { waitUntil: "load" });
 
-  // ページのHTMLを取得してコンソールに表示
-  const pageContent = await page.content();
-  console.log(pageContent); // これでページ全体のHTMLが表示されます
+  // セレクタが見つかるまで待つ
+  await page.waitForSelector("#tablefix_t_b");
 
-  // 必要な要素を確認する
-  const score = await page.$eval(".score", (el) => el.textContent);
-  console.log("Score:", score);
+  // テーブルの行データをすべて取得
+  const playerStats = await page.$$eval("#tablefix_t_b tbody tr", (rows) =>
+    rows.map((row) => {
+      const cells = row.querySelectorAll("td");
+      return Array.from(cells).map((cell) => cell.innerText.trim());
+    })
+  );
 
-  // ブラウザを閉じる
+  console.log(playerStats); // 配列の配列で出力される
+
   await browser.close();
 }
 
