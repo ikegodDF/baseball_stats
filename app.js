@@ -15,6 +15,8 @@ const scrapeData = async (teamName, dateStr) => {
     DeNA: "db",
     ヤクルト: "s",
   };
+  console.log(teamName);
+  console.log(dateStr);
 
   const buildUrl = async (teamName, dateStr) => {
     const featuredTeam = teamShortNames[teamName];
@@ -94,7 +96,7 @@ const scrapeData = async (teamName, dateStr) => {
     throw new Error("有効な試合ページが見つかりませんでした");
   };
 
-  const { browser, page } = await buildUrl("日本ハム", "2024-06-05");
+  const { browser, page } = await buildUrl(teamName, dateStr);
 
   // // Puppeteerでブラウザを起動
   // const browser = await puppeteer.launch({ headless: true });
@@ -169,4 +171,26 @@ const scrapeData = async (teamName, dateStr) => {
   console.log(JSON.stringify(cumulativeStats, null, 2));
 };
 
-scrapeData();
+homedays = [
+  "2022-03-29",
+  "2022-02-30",
+  "2022-03-31",
+  "2022-05-27",
+  "2022-08-10",
+  "2022-08-16",
+  "2022-09-28",
+  "2023-03-30",
+  "2023-06-08",
+  "2023-09-08",
+  "2023-09-28",
+  "2024-04-02",
+  "2024-04-03",
+  "2024-04-06",
+  "2024-04-16",
+  "2024-06-14",
+  "2024-06-15",
+];
+visitor;
+for (let i = 0; i < days.length; i++) {
+  scrapeData("日本ハム", days[i]);
+}
