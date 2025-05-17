@@ -42,13 +42,20 @@ const takeURL = async (year, month) => {
     const groupedByDate = links.reduce((acc, game) => {
       const date = game.date;
       if (!acc[date]) {
-        acc[date] = [];
+        acc[date] = {};
       }
-      acc[date].push({
+      acc[date][game.teams[0]] = {
         href: game.href,
         score: game.score,
-        teams: game.teams,
-      });
+        opponent: game.teams[1],
+        fora: "home",
+      };
+      acc[date][game.teams[1]] = {
+        href: game.href,
+        score: game.score,
+        opponent: game.teams[0],
+        fora: "away",
+      };
       return acc;
     }, {});
 
