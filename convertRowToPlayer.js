@@ -1,4 +1,5 @@
 import { readFile } from "fs/promises";
+import { waitForDebugger } from "inspector";
 
 console.log(data);
 
@@ -55,6 +56,19 @@ const mathdate = (teamName, strDate) => {
     const page = await browser.newPage();
 
     //
+    const tryUrl = async (url) => {
+      try {
+        const res = await page.goto(url, {
+          waitUntil: "domcontentloaded",
+          timeout: 5000,
+        });
+        if (res.status() === 200) {
+          return true;
+        }
+      } catch (err) {
+        return false;
+      }
+    };
   };
   for (let i = 0; i < strDate.length; i++) {}
 };
