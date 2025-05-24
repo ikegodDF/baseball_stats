@@ -1,26 +1,5 @@
 import { readFile } from "fs/promises";
-import { waitForDebugger } from "inspector";
-
-console.log(data);
-
-// urlへのアクセス
-const acceessURL = async (teamName, dateStr) => {
-  const teamNameconverter = {
-    日本ハム: "f",
-    ソフトバンク: "h",
-    オリックス: "b",
-    楽天: "e",
-    西武: "l",
-    ロッテ: "m",
-    巨人: "g",
-    阪神: "t",
-    中日: "d",
-    広島: "c",
-    DeNA: "db",
-    ヤクルト: "s",
-  };
-  const featureTeam = teamNameconverter[teamName];
-};
+import puppeteer from "puppeteer";
 
 // 入力チーム、日付から個人成績の抽出とテーブル化
 const mathdate = async (teamName, strDate) => {
@@ -42,15 +21,16 @@ const mathdate = async (teamName, strDate) => {
     };
     // 入力日付データの整形
     const featureTeam = teamNameconverter[teamName];
-    const date = String(new Date(dateStr));
-    const year = String(date.getFullYear(date));
-    const month = String(date.getMonth(date).padStart(2, "0"));
-    const day = `${month}${date.getDate(date).padStart(2, "0")}`;
+    const date = new Date(dateStr);
+    const year = String(date.getFullYear());
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = `${month}${String(date.getDate()).padStart(2, "0")}`;
 
     // urlの検索
     const urls = JSON.parse(await readFile("url.json", "utf-8"));
-    const url = `npb.jp${urls[year][month][day][featureTeam]["href"]}box.html`;
-    return url;
+    const url = `https://npb.jp${urls[year][month][day][featureTeam]["href"]}box.html`;
+    const homeoraway = urls[year][month][day][featureTeam]["fora"];
+    return { url, homeoraway };
   };
 
   //urlへのアクセス
@@ -63,16 +43,17 @@ const mathdate = async (teamName, strDate) => {
         timeout: 5000,
       });
       if (res.status() === 200) {
-        return true;
+        return { browser, page };
       }
     } catch (err) {
+      await browser.close();
       return false;
     }
   };
 
   // テーブルの取得
-  const getTable = async () => {
-    if (urls[year][month][day][featureTeam]["fora"] === "home") {
+  const getTable = async (page, homeoraway) => {
+    if (homeoraway === "home") {
       await page.waitForSelector("#tablefix_b_b");
       const hitterStatsRaw = await page.$$eval(
         "#tablefix_b_b tbody tr",
@@ -92,7 +73,7 @@ const mathdate = async (teamName, strDate) => {
           })
       );
       return { hitterStatsRaw, pitcherStatsRaw };
-    } else if (urls[year][month][day][featureTeam]["fora"] === "away") {
+    } else if (homeoraway === "away") {
       await page.waitForSelector("#tablefix_t_b");
       const hitterStatsRaw = await page.$$eval(
         "#tablefix_t_b tbody tr",
@@ -138,8 +119,10 @@ const mathdate = async (teamName, strDate) => {
     const [
       x,
       name,
+      batter,
       pitches,
       ip,
+      voids,
       hits,
       homeruns,
       walks,
@@ -170,8 +153,125 @@ const mathdate = async (teamName, strDate) => {
     };
   };
 
+  // 個人成績の記録(打者)
+  const addHitterStats = (cumulative, hitter) => {
+    const name = hitter.name;
+    if (!cumulative[name]) {
+      cumulative[name] = {
+        position: hitter.position,
+        atBats: hitter.stats.atBats,
+        runs: hitter.stats.runs,
+        hits: hitter.stats.hits,
+        rbi: hitter.stats.rbi,
+        steals: hitter.stats.steals,
+      };
+    } else {
+      const p = cumulative[name];
+      p.atBats += hitter.stats.atBats;
+      p.runs += hitter.stats.runs;
+      p.hits += hitter.stats.hits;
+      p.rbi += hitter.stats.rbi;
+      p.steals += hitter.stats.steals;
+    }
+  };
+
+  // 個人成績の記録(投手)
+  const addPitcherStats = (cumulative, pitcher) => {
+    const name = pitcher.name;
+    if (!cumulative[name]) {
+      cumulative[name] = pitcher;
+    } else {
+      const p = cumulative[name];
+      p.pitches += pitcher.pitches;
+      p.innings += pitcher.innings;
+      p.hits += pitcher.hits;
+      p.homeruns += pitcher.homeruns;
+      p.walks += pitcher.walks;
+      p.hbp += pitcher.hbp;
+      p.strikeouts += pitcher.strikeouts;
+      p.wp += pitcher.wp;
+      p.bk += pitcher.bk;
+      p.r += pitcher.r;
+      p.er += pitcher.er;
+      p.win += pitcher.win;
+      p.loss += pitcher.loss;
+      p.save += pitcher.save;
+      p.hold += pitcher.hold;
+    }
+  };
+
+  const convertRowToPlayer = (cumulative, { hitter, pitcher }) => {
+    for (const row of hitter) {
+      const player = convertRowToHitter(row);
+      addHitterStats(cumulative.hitter, player);
+    }
+    for (const row of pitcher) {
+      const player = convertRowToPitcher(row);
+      addPitcherStats(cumulative.pitcher, player);
+    }
+  };
+
+  const cumulativeStats = { hitter: {}, pitcher: {} };
+
   // 入力された日付データからデータ取得＆整形
   for (let i = 0; i < strDate.length; i++) {
-    const url = await acceessURL(teamName, strDate[i]);
+    const { url, homeoraway } = await acceessURL(teamName, strDate[i]);
+    const browserData = await tryUrl(url);
+    if (!browserData) continue;
+
+    const { browser, page } = browserData;
+    const { hitterStatsRaw, pitcherStatsRaw } = await getTable(
+      page,
+      homeoraway
+    );
+    await convertRowToPlayer(cumulativeStats, {
+      hitter: hitterStatsRaw,
+      pitcher: pitcherStatsRaw,
+    });
+    await browser.close();
   }
+  return cumulativeStats;
 };
+
+const homedays = [
+  "2022-03-29",
+  "2022-03-30",
+  "2022-03-31",
+  "2022-05-27",
+  "2022-08-10",
+  "2022-08-16",
+  "2022-9-12",
+  "2022-09-13",
+  "2022-09-28",
+  "2023-03-30",
+  "2023-06-06",
+  "2023-06-17",
+  "2023-8-18",
+  "2023-8-19",
+  "2023-8-20",
+  "2023-09-08",
+  "2023-09-28",
+  "2024-03-29",
+  "2024-03-30",
+  "2024-04-02",
+  "2024-04-03",
+  "2024-04-06",
+  "2024-04-16",
+  "2024-06-04",
+  "2024-06-05",
+  "2024-06-06",
+  "2024-06-07",
+  "2024-06-14",
+  "2024-06-15",
+  "2024-10-13",
+  "2024-10-17",
+  "2024-10-18",
+  "2025-03-28",
+  "2025-03-29",
+  "2025-04-01",
+  "2025-04-23",
+];
+
+mathdate("日本ハム", homedays)
+  .then((result) => console.log(result))
+  .catch((error) => console.error("エラーが発生しました:", error));
