@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer");
+import puppeteer from "puppeteer";
 
 const scrapeData = async (teamName, dateStr) => {
   const teamShortNames = {
@@ -171,7 +171,7 @@ const scrapeData = async (teamName, dateStr) => {
   console.log(JSON.stringify(cumulativeStats, null, 2));
 };
 
-homedays = [
+consthomedays = [
   "2022-03-29",
   "2022-03-30",
   "2022-03-31",
