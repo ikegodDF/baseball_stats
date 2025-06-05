@@ -171,7 +171,7 @@ const scrapeData = async (teamName, dateStr) => {
   console.log(JSON.stringify(cumulativeStats, null, 2));
 };
 
-consthomedays = [
+const homedays = [
   "2022-03-29",
   "2022-03-30",
   "2022-03-31",
@@ -190,7 +190,5 @@ consthomedays = [
   "2024-06-14",
   "2024-06-15",
 ];
-visitor;
-for (let i = 0; i < days.length; i++) {
-  scrapeData("日本ハム", days[i]);
-}
+
+scrapeData("日本ハム", "2024-04-03");
