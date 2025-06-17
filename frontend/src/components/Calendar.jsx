@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { DaySelector } from "./DaySelector";
 
 export const Calendar = () => {
+  // 選択日付の管理(React特有の管理)
   const [selectedDates, setSelectedDates] = useState([]);
 
+  // クリック時の動作(on/off切り替え)
   const toggleDate = (date) => {
     setSelectedDates((prevDates) =>
       prevDates.includes(date)
@@ -32,6 +34,7 @@ export const Calendar = () => {
       <h2>
         {year}年 {month + 1}月の観戦日
       </h2>
+      {/* 日付ごとにDaySelectorコンポーネントを表示(DaySelectorの中身は親から渡すデータ) */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
         {days.map((date) => (
           <DaySelector
