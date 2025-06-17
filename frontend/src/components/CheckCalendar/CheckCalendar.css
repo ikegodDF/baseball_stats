@@ -3,3 +3,8 @@
   color: white;
   border-radius: 50%;
 }
+
+.disabled-day {
+  pointer-events: none;
+  opacity: 0.3;
+}

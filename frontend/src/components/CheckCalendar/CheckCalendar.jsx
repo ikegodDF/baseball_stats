@@ -20,12 +20,17 @@ export const CheckCalendar = () => {
     return selectedDates.some((d) => d.toDateString() === date.toDateString());
   };
 
+  const days = [new Date(2025, 6, 12), new Date(2025, 6, 13)];
+
   return (
     <div>
       <DatePicker
         inline
         onChange={toggleDate}
         highlightDates={selectedDates}
+        filterDate={(date) =>
+          days.some((d) => d.toDateString() === date.toDateString())
+        }
         dayClassName={(date) =>
           isSelected(date) ? "selected-date" : "undefined"
         }
