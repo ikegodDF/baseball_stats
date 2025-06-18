@@ -1,10 +1,64 @@
-.selected-day {
-  background-color: #3f51b5;
-  color: white;
-  border-radius: 50%;
-}
-
 .disabled-day {
   pointer-events: none;
   opacity: 0.3;
+}
+
+.読売ジャイアンツ {
+  background-color: #ff9800 !important; /* オレンジ */
+  color: black !important;
+}
+
+.阪神タイガース {
+  background-color: #fdd835 !important; /* 黄色 */
+  color: black !important;
+}
+
+.中日ドラゴンズ {
+  background-color: #2196f3 !important; /* 青 */
+  color: white !important;
+}
+
+.広島東洋カープ {
+  background-color: #ff0000 !important; /* 鮮明な赤 */
+  color: white !important;
+}
+
+.東京ヤクルトスワローズ {
+  background-color: #66bb6a !important; /* 緑 */
+  color: white !important;
+}
+
+.横浜DeNAベイスターズ {
+  background-color: #2196f3 !important; /* 中日と同じ青 */
+  color: #0d47a1 !important; /* 濃いめの青 */
+}
+
+.オリックス・バファローズ {
+  background-color: #424242 !important; /* 黒グレー */
+  color: white !important;
+}
+
+.埼玉西武ライオンズ {
+  background-color: #3f51b5 !important; /* 紺色 */
+  color: white !important;
+}
+
+.千葉ロッテマリーンズ {
+  background-color: #000000 !important; /* 黒 */
+  color: #ffffff !important; /* 白 */
+}
+
+.福岡ソフトバンクホークス {
+  background-color: #ffd600 !important; /* 鷹の黄 */
+  color: #ffffff !important; /* 白 */
+}
+
+.北海道日本ハムファイターズ {
+  background-color: #29b6f6 !important; /* 水色 */
+  color: white !important;
+}
+
+.東北楽天ゴールデンイーグルス {
+  background-color: #b22222 !important; /* 中間の赤 */
+  color: #ffd700 !important; /* 金色 */
 }

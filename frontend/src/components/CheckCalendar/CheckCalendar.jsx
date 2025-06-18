@@ -4,40 +4,31 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import "./CheckCalendar.css";
 
-export const CheckCalendar = () => {
-  const [selectedDates, setSelectedDates] = useState([]);
-
-  const toggleDate = (date) => {
-    const key = date.toDateString();
-    const exists = selectedDates.find((d) => d.toDateString() === key);
-    const next = exists
-      ? selectedDates.filter((d) => d.toDateString() !== key)
-      : [...selectedDates, date];
-    setSelectedDates(next);
-  };
-
-  const isSelected = (date) => {
-    return selectedDates.some((d) => d.toDateString() === date.toDateString());
-  };
-
-  const days = [new Date(2025, 6, 12), new Date(2025, 6, 13)];
-
+export const CheckCalendar = ({
+  selectedDays,
+  toggleDay,
+  isSelectedDays,
+  gameDays,
+  selectedTeam,
+}) => {
   return (
     <div>
       <DatePicker
         inline
-        onChange={toggleDate}
-        highlightDates={selectedDates}
+        onChange={toggleDay}
+        highlightDates={selectedDays}
         filterDate={(date) =>
-          days.some((d) => d.toDateString() === date.toDateString())
+          gameDays.some(
+            (d) => new Date(d).toDateString() === date.toDateString()
+          )
         }
         dayClassName={(date) =>
-          isSelected(date) ? "selected-date" : "undefined"
+          isSelectedDays(date) ? `${selectedTeam.teamName}` : "undefined"
         }
       />
       <h3>選択中の日付：</h3>
       <ul>
-        {selectedDates.map((date) => (
+        {selectedDays.map((date) => (
           <li key={date.toISOString()}>{date.toLocaleDateString()}</li>
         ))}
       </ul>
