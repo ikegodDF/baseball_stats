@@ -4,6 +4,12 @@ import fs from "fs/promises";
 const takeURL = async (year, month) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+
+  // User-Agent を設定
+  await page.setUserAgent(
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+  );
+
   const teamNameConverter = {
     g: "読売ジャイアンツ",
     t: "阪神タイガース",
@@ -21,20 +27,23 @@ const takeURL = async (year, month) => {
 
   try {
     await page.goto(
-      `https://npb.jp/games/${year}/schedule_${month}_detail.html`
+      `https://npb.jp/games/${year}/schedule_${month}_detail.html`,
+      {
+        timeout: 60000, // 60秒に延長
+        waitUntil: "domcontentloaded", // 早めの読み込みで進める
+      }
     );
 
     const links = await page.$$eval(
       `div.table_normal.summary_table tbody a`,
       (elements) =>
         elements.map((element) => {
-          // テキストの整形関数(空白の削除)
           const cleanText = (text) => {
             return text.replace(/\s+/g, " ").trim();
           };
 
-          const row = element.closest("tr");
           const href = element.getAttribute("href");
+          const row = element.closest("tr");
           const teams = href.match(
             /\/scores\/\d{4}\/\d{4}\/([a-z]+)\-([a-z]+)\-/i
           );
@@ -42,10 +51,10 @@ const takeURL = async (year, month) => {
           const score = cleanText(element.textContent);
 
           return {
-            href: href,
+            href,
             date: date[1] + date[2],
             teams: [[teams[1]], [teams[2]]],
-            score: score,
+            score,
           };
         })
     );
@@ -59,10 +68,16 @@ const takeURL = async (year, month) => {
         parseInt(date.slice(4, 6)),
         parseInt(date.slice(6, 8)),
       ];
-      game.teams.forEach((team) => {
-        if (!acc[teamNameConverter[team]]) acc[teamNameConverter[team]] = [];
-        acc[teamNameConverter[team]].push(formattedDateArray);
-      });
+      const homeTeam = teamNameConverter[game.teams[0][0]];
+      const awayTeam = teamNameConverter[game.teams[1][0]];
+
+      // ホームチームの記録
+      if (!acc[homeTeam]) acc[homeTeam] = [];
+      acc[homeTeam].push({ date: formattedDateArray, role: "home" });
+
+      // アウェイチームの記録
+      if (!acc[awayTeam]) acc[awayTeam] = [];
+      acc[awayTeam].push({ date: formattedDateArray, role: "away" });
       return acc;
     }, {});
 
@@ -70,7 +85,7 @@ const takeURL = async (year, month) => {
   } catch (error) {
     console.error("データの取得中にエラーが発生しました:", error);
     await browser.close();
-    return [];
+    return {};
   }
 };
 

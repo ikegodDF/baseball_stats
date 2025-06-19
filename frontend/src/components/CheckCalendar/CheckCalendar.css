@@ -3,62 +3,170 @@
   opacity: 0.3;
 }
 
-.読売ジャイアンツ {
-  background-color: #ff9800 !important; /* オレンジ */
+/* 読売ジャイアンツ ホームゲーム用 */
+.読売ジャイアンツ-home {
+  background-color: #ffffff !important; /* オレンジ（ホームユニフォーム） */
+  color: black !important;
+  border: 0.15px solid #ff9800 !important; /* 内側のオレンジの外枠 */
+  box-shadow: inset 0 0 0 0.15px #000000, 0 0 0 0.15px #ff9800 !important; /* 内側からオレンジ、黒、オレンジの3重の外枠 */
+}
+
+/* 読売ジャイアンツ ビジターゲーム用 */
+.読売ジャイアンツ-away {
+  background-color: #ff9800 !important; /* 白（ビジターユニフォーム） */
+  color: black !important;
+  border: 0.5px solid #000000 !important; /* 内側の黒い外枠 */
+  box-shadow: inset 0 0 0 0.5px #000000, 0 0 0 0.5px #000000 !important; /* 2重の外枠 */
+}
+
+/* 阪神タイガース ホームゲーム用 */
+.阪神タイガース-home {
+  background: repeating-linear-gradient(
+    90deg,
+    #ffffff 0px,
+    #ffffff 4.5px,
+    #000000 4.5px,
+    #000000 5px
+  ) !important; /* 白背景に黒い縦縞（ホームユニフォーム） */
+  background-size: 5px 100% !important;
+  background-position: 0 0 !important;
+  color: black !important;
+  text-shadow: -0.5px -0.5px 0 #ffd600, 0.5px -0.5px 0 #ffd600,
+    -0.5px 0.5px 0 #ffd600, 0.5px 0.5px 0 #ffd600 !important; /* 黄色の縁取り */
+}
+
+/* 阪神タイガース ビジターゲーム用 */
+.阪神タイガース-away {
+  background: repeating-linear-gradient(
+    90deg,
+    #dbdbdb 0px,
+    #dbdbdb 4.5px,
+    #000000 4.5px,
+    #000000 5px
+  ) !important; /* 薄いグレー背景に黒い縦縞（ビジターユニフォーム） */
+  background-size: 5px 100% !important;
+  background-position: 0 0 !important;
+  color: black !important;
+  text-shadow: -1px -1px 0 #ffd600, 1px -1px 0 #ffd600, -1px 1px 0 #ffd600,
+    1px 1px 0 #ffd600 !important; /* 黄色の縁取り */
+}
+
+/* 中日ドラゴンズ ホームゲーム用 */
+.中日ドラゴンズ-home {
+  background-color: #2196f3 !important; /* 青（ホームユニフォーム） */
+  color: white !important;
+}
+
+/* 中日ドラゴンズ ビジターゲーム用 */
+.中日ドラゴンズ-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
   color: black !important;
 }
 
-.阪神タイガース {
-  background-color: #fdd835 !important; /* 黄色 */
+/* 広島東洋カープ ホームゲーム用 */
+.広島東洋カープ-home {
+  background-color: #ff0000 !important; /* 赤（ホームユニフォーム） */
+  color: white !important;
+}
+
+/* 広島東洋カープ ビジターゲーム用 */
+.広島東洋カープ-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
   color: black !important;
 }
 
-.中日ドラゴンズ {
-  background-color: #2196f3 !important; /* 青 */
+/* 東京ヤクルトスワローズ ホームゲーム用 */
+.東京ヤクルトスワローズ-home {
+  background-color: #66bb6a !important; /* 緑（ホームユニフォーム） */
   color: white !important;
 }
 
-.広島東洋カープ {
-  background-color: #ff0000 !important; /* 鮮明な赤 */
+/* 東京ヤクルトスワローズ ビジターゲーム用 */
+.東京ヤクルトスワローズ-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
+  color: black !important;
+}
+
+/* 横浜DeNAベイスターズ ホームゲーム用 */
+.横浜DeNAベイスターズ-home {
+  background-color: #2196f3 !important; /* 青（ホームユニフォーム） */
   color: white !important;
 }
 
-.東京ヤクルトスワローズ {
-  background-color: #66bb6a !important; /* 緑 */
+/* 横浜DeNAベイスターズ ビジターゲーム用 */
+.横浜DeNAベイスターズ-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
+  color: black !important;
+}
+
+/* オリックス・バファローズ ホームゲーム用 */
+.オリックス・バファローズ-home {
+  background-color: #424242 !important; /* 黒グレー（ホームユニフォーム） */
   color: white !important;
 }
 
-.横浜DeNAベイスターズ {
-  background-color: #2196f3 !important; /* 中日と同じ青 */
-  color: #0d47a1 !important; /* 濃いめの青 */
+/* オリックス・バファローズ ビジターゲーム用 */
+.オリックス・バファローズ-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
+  color: black !important;
 }
 
-.オリックス・バファローズ {
-  background-color: #424242 !important; /* 黒グレー */
+/* 埼玉西武ライオンズ ホームゲーム用 */
+.埼玉西武ライオンズ-home {
+  background-color: #3f51b5 !important; /* 紺色（ホームユニフォーム） */
   color: white !important;
 }
 
-.埼玉西武ライオンズ {
-  background-color: #3f51b5 !important; /* 紺色 */
+/* 埼玉西武ライオンズ ビジターゲーム用 */
+.埼玉西武ライオンズ-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
+  color: black !important;
+}
+
+/* 千葉ロッテマリーンズ ホームゲーム用 */
+.千葉ロッテマリーンズ-home {
+  background-color: #000000 !important; /* 黒（ホームユニフォーム） */
   color: white !important;
 }
 
-.千葉ロッテマリーンズ {
-  background-color: #000000 !important; /* 黒 */
-  color: #ffffff !important; /* 白 */
+/* 千葉ロッテマリーンズ ビジターゲーム用 */
+.千葉ロッテマリーンズ-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
+  color: black !important;
 }
 
-.福岡ソフトバンクホークス {
-  background-color: #ffd600 !important; /* 鷹の黄 */
-  color: #ffffff !important; /* 白 */
+/* 福岡ソフトバンクホークス ホームゲーム用 */
+.福岡ソフトバンクホークス-home {
+  background-color: #ffd600 !important; /* 黄色（ホームユニフォーム） */
+  color: black !important;
 }
 
-.北海道日本ハムファイターズ {
-  background-color: #29b6f6 !important; /* 水色 */
+/* 福岡ソフトバンクホークス ビジターゲーム用 */
+.福岡ソフトバンクホークス-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
+  color: black !important;
+}
+
+/* 北海道日本ハムファイターズ ホームゲーム用 */
+.北海道日本ハムファイターズ-home {
+  background-color: #29b6f6 !important; /* 水色（ホームユニフォーム） */
   color: white !important;
 }
 
-.東北楽天ゴールデンイーグルス {
-  background-color: #b22222 !important; /* 中間の赤 */
-  color: #ffd700 !important; /* 金色 */
+/* 北海道日本ハムファイターズ ビジターゲーム用 */
+.北海道日本ハムファイターズ-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
+  color: black !important;
+}
+
+/* 東北楽天ゴールデンイーグルス ホームゲーム用 */
+.東北楽天ゴールデンイーグルス-home {
+  background-color: #b22222 !important; /* 赤（ホームユニフォーム） */
+  color: white !important;
+}
+
+/* 東北楽天ゴールデンイーグルス ビジターゲーム用 */
+.東北楽天ゴールデンイーグルス-away {
+  background-color: #ffffff !important; /* 白（ビジターユニフォーム） */
+  color: black !important;
 }

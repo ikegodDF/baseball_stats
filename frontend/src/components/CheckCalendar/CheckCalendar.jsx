@@ -8,8 +8,9 @@ export const CheckCalendar = ({
   selectedDays,
   toggleDay,
   isSelectedDays,
-  gameDays,
   selectedTeam,
+  isGameDay,
+  isHome,
 }) => {
   return (
     <div>
@@ -17,13 +18,13 @@ export const CheckCalendar = ({
         inline
         onChange={toggleDay}
         highlightDates={selectedDays}
-        filterDate={(date) =>
-          gameDays.some(
-            (d) => new Date(d).toDateString() === date.toDateString()
-          )
-        }
+        filterDate={isGameDay}
         dayClassName={(date) =>
-          isSelectedDays(date) ? `${selectedTeam.teamName}` : "undefined"
+          isSelectedDays(date)
+            ? isHome(date)
+              ? `${selectedTeam.teamName}-home`
+              : `${selectedTeam.teamName}-away`
+            : "undefined"
         }
       />
       <h3>選択中の日付：</h3>

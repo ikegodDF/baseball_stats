@@ -52,6 +52,36 @@ export const TeamDashboard = () => {
     return selectedDays.some((d) => d.toDateString() === date.toDateString());
   };
 
+  // Safari対応の安全な日付比較関数
+  const isGameDay = (date) => {
+    if (!gameDays || gameDays.length === 0) return false;
+
+    const dateYear = date.getFullYear();
+    const dateMonth = date.getMonth() + 1;
+    const dateDay = date.getDate();
+
+    return gameDays.some((gameDay) => {
+      const [year, month, day] = gameDay.date;
+      return year === dateYear && month === dateMonth && day === dateDay;
+    });
+  };
+
+  const isHome = (date) => {
+    const dateYear = date.getFullYear();
+    const dateMonth = date.getMonth() + 1;
+    const dateDay = date.getDate();
+
+    return gameDays.some((gameDay) => {
+      const [year, month, day] = gameDay.date;
+      return (
+        year === dateYear &&
+        month === dateMonth &&
+        day === dateDay &&
+        gameDay.role === "home"
+      );
+    });
+  };
+
   return (
     <div>
       <h1>お気に入りチーム</h1>
@@ -69,6 +99,8 @@ export const TeamDashboard = () => {
         isSelectedDays={isSelectedDays}
         gameDays={gameDays}
         selectedTeam={selectedTeam}
+        isGameDay={isGameDay}
+        isHome={isHome}
       />
     </div>
   );
