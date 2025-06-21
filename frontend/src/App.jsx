@@ -1,13 +1,17 @@
 import React from "react";
-import { Header } from "./components/Header/Header";
-import { TeamDashboard } from "./components/TeamDashboard";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Home } from "./pages/Home/Home";
+import { Result } from "./pages/Result/Result";
 
 function App() {
   return (
     <div className="App">
-      <Header />
-      <TeamDashboard />
+      <BrowserRouter basename="/baseball_stats">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/result" element={<Result />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

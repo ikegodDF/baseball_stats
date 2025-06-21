@@ -1,0 +1,7 @@
+.center-column {
+  width: 50%;
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
