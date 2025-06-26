@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useSelectedDays } from "../../contexts/SelectedDaysContext";
 
 import "./CheckCalendar.css";
 
 export const CheckCalendar = ({
-  selectedDays,
-  toggleDay,
-  isSelectedDays,
+  gameDays,
   selectedTeam,
   isGameDay,
   isHome,
 }) => {
+  const { selectedDays, toggleDay, isSelectedDays } = useSelectedDays();
+
   return (
     <div>
       <DatePicker
@@ -27,12 +28,14 @@ export const CheckCalendar = ({
             : "undefined"
         }
       />
-      <h3>選択中の日付：</h3>
-      <ul>
-        {selectedDays.map((date) => (
-          <li key={date.toISOString()}>{date.toLocaleDateString()}</li>
-        ))}
-      </ul>
+      <div className="selected-dates-container">
+        <h3>選択中の日付：</h3>
+        <ul className="selected-dates-list">
+          {selectedDays.map((date) => (
+            <li key={date.toISOString()}>{date.toLocaleDateString()}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

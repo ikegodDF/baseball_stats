@@ -34,24 +34,6 @@ export const TeamDashboard = () => {
 
   const gameDays = gamedays[selectedTeam.teamName] || [];
 
-  //   観戦日管理
-  const [selectedDays, setSelectedDays] = useState([]);
-
-  //   観戦日を選択、追加する機能
-  const toggleDay = (date) => {
-    const key = date.toDateString();
-    const exists = selectedDays.find((d) => d.toDateString() === key);
-    const next = exists
-      ? selectedDays.filter((d) => d.toDateString() !== key)
-      : [...selectedDays, date];
-    setSelectedDays(next);
-  };
-
-  //   カレンダーの日付が選択されているか判定する機能
-  const isSelectedDays = (date) => {
-    return selectedDays.some((d) => d.toDateString() === date.toDateString());
-  };
-
   // Safari対応の安全な日付比較関数
   const isGameDay = (date) => {
     if (!gameDays || gameDays.length === 0) return false;
@@ -94,9 +76,6 @@ export const TeamDashboard = () => {
       />
       <h1>観戦日選択</h1>
       <CheckCalendar
-        selectedDays={selectedDays}
-        toggleDay={toggleDay}
-        isSelectedDays={isSelectedDays}
         gameDays={gameDays}
         selectedTeam={selectedTeam}
         isGameDay={isGameDay}

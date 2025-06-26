@@ -10,6 +10,9 @@
   text-shadow: -0.3px -0.3px 0 #ff9800, 0.3px -0.3px 0 #ff9800,
     -0.3px 0.3px 0 #ff9800, 0.3px 0.3px 0 #ff9800 !important;
   border: 1px solid #ff9800 !important; /* 内側のオレンジの外枠 */
+  box-sizing: border-box !important;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 読売ジャイアンツ ビジターゲーム用 */
@@ -19,6 +22,9 @@
   text-shadow: -0.3px -0.3px 0 #ffffff, 0.3px -0.3px 0 #ffffff,
     -0.3px 0.3px 0 #ffffff, 0.3px 0.3px 0 #ffffff !important;
   border: 1px solid #000000 !important; /* 内側の黒い外枠 */
+  box-sizing: border-box !important;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 阪神タイガース ホームゲーム用 */
@@ -58,6 +64,9 @@
   background-color: #ffffff !important; /* 青（ホームユニフォーム） */
   color: red !important;
   border: 1px solid #2196f3 !important;
+  box-sizing: border-box !important;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 中日ドラゴンズ ビジターゲーム用 */
@@ -73,6 +82,9 @@
   border: 1px solid #ff0000 !important;
   text-shadow: -0.3px -0.3px 0 #000000, 0.3px -0.3px 0 #000000,
     -0.3px 0.3px 0 #000000, 0.3px 0.3px 0 #000000;
+  box-sizing: border-box !important;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 広島東洋カープ ビジターゲーム用 */
@@ -106,8 +118,11 @@
   background-color: #ffffff !important; /* 青（ホームユニフォーム） */
   color: #031763 !important;
   border: 1px solid #0179e7 !important;
+  box-sizing: border-box !important;
   text-shadow: -0.3px -0.3px 0 #59b2de, 0.3px -0.3px 0 #59b2de,
     -0.3px 0.3px 0 #59b2de, 0.3px 0.3px 0 #59b2de;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 横浜DeNAベイスターズ ビジターゲーム用 */
@@ -125,6 +140,9 @@
   border: 1px solid #141528 !important;
   text-shadow: -0.3px -0.3px 0 #cdc383, 0.3px -0.3px 0 #cdc383,
     -0.3px 0.3px 0 #cdc383, 0.3px 0.3px 0 #cdc383;
+  box-sizing: border-box !important;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* オリックス・バファローズ ビジターゲーム用 */
@@ -140,6 +158,9 @@
   background-color: #ffffff !important; /* 紺色（ホームユニフォーム） */
   color: #24293c !important;
   border: 1px solid #24293c !important;
+  box-sizing: border-box !important;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 埼玉西武ライオンズ ビジターゲーム用 */
@@ -173,8 +194,11 @@
   background-color: #ffffff !important; /* 黄色（ホームユニフォーム） */
   color: black !important;
   border: 1px solid #ffd600 !important;
+  box-sizing: border-box !important;
   text-shadow: -0.3px -0.3px 0 #cfced2, 0.3px -0.3px 0 #cfced2,
     -0.3px 0.3px 0 #cfced2, 0.3px 0.3px 0 #cfced2;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 福岡ソフトバンクホークス ビジターゲーム用 */
@@ -182,8 +206,11 @@
   background-color: #000000 !important; /* 白（ビジターユニフォーム） */
   color: white !important;
   border: 1px solid #ffd600 !important;
+  box-sizing: border-box !important;
   text-shadow: -0.3px -0.3px 0 #cfced2, 0.3px -0.3px 0 #cfced2,
     -0.3px 0.3px 0 #cfced2, 0.3px 0.3px 0 #cfced2;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 北海道日本ハムファイターズ ホームゲーム用 */
@@ -191,8 +218,11 @@
   background-color: #ffffff !important; /* 水色（ホームユニフォーム） */
   color: #ead59b !important;
   border: 1px solid #095da5 !important;
+  box-sizing: border-box !important;
   text-shadow: -0.3px -0.3px 0 #e4dbc3, 0.3px -0.3px 0 #e4dbc3,
     -0.3px 0.3px 0 #e4dbc3, 0.3px 0.3px 0 #e4dbc3;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 北海道日本ハムファイターズ ビジターゲーム用 */
@@ -206,12 +236,27 @@
   background-color: #ffffff !important; /* 赤（ホームユニフォーム） */
   color: #b22222 !important;
   border: 1px solid #b22222 !important;
+  box-sizing: border-box !important;
   text-shadow: -0.3px -0.3px 0 #ffd700, 0.3px -0.3px 0 #ffd700,
     -0.3px 0.3px 0 #ffd700, 0.3px 0.3px 0 #ffd700;
+  height: 26px !important;
+  line-height: 26px !important;
 }
 
 /* 東北楽天ゴールデンイーグルス ビジターゲーム用 */
 .東北楽天ゴールデンイーグルス-away {
   background-color: #b22222 !important; /* 白（ビジターユニフォーム） */
   color: white !important;
+}
+
+/* カレンダーのサイズを拡大（縦横比保持） */
+.react-datepicker {
+  transform: scale(1.5);
+  transform-origin: center top;
+  margin-bottom: 200px; /* 拡大した分のマージンを追加 */
+}
+
+/* 選択中の日付リストのスタイル */
+.selected-dates-list {
+  list-style: none;
 }
