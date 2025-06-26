@@ -10,3 +10,111 @@
   flex-direction: row;
   width: 100%;
 }
+
+.result-content {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  flex: 1;
+}
+
+.result-content h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.no-selection {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.no-selection p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.selected-dates-info {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.selected-dates-info h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.selected-dates-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.selected-dates-info li {
+  background: #e9ecef;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  color: #495057;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.game-results-table {
+  margin-top: 20px;
+}
+
+.game-results-table h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.game-results-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-results-table th {
+  background: #f8f9fa;
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.game-results-table td {
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+  color: #495057;
+}
+
+.game-results-table tr:hover {
+  background: #f8f9fa;
+}
+
+.result-win {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.result-lose {
+  color: #dc3545;
+  font-weight: bold;
+}
