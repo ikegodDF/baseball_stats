@@ -8,12 +8,14 @@ function App() {
   return (
     <div className="App">
       <SelectedDaysProvider>
-        <BrowserRouter basename="/baseball_stats">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/result" element={<Result />} />
-          </Routes>
-        </BrowserRouter>
+        <GameResultsProvider>
+          <BrowserRouter basename="/baseball_stats">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/result" element={<Result />} />
+            </Routes>
+          </BrowserRouter>
+        </GameResultsProvider>
       </SelectedDaysProvider>
     </div>
   );
