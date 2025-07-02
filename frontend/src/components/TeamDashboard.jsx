@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FavoriteteamSelector } from "./FavoriteTeamSelector/FavoriteteamSelector";
 import { CheckCalendar } from "./CheckCalendar/CheckCalendar";
-
+import { useSelectedTeam } from "../contexts/SelectedTeamContext";
 import gamedays from "../gamedays.json";
 
 export const TeamDashboard = () => {
@@ -20,12 +20,11 @@ export const TeamDashboard = () => {
     { teamId: 12, teamName: "東北楽天ゴールデンイーグルス" },
   ];
 
-  // お気に入りチーム管理
-  const [selectedTeamId, setSelectedTeamId] = useState(inputDate[0].teamId);
+  const { selectedTeamId, setSelectedTeamId } = useSelectedTeam();
 
-  const selectedTeam = inputDate.find(
-    (team) => team.teamId === Number(selectedTeamId)
-  );
+  const selectedTeam =
+    inputDate.find((team) => team.teamId === Number(selectedTeamId)) ||
+    inputDate[0];
 
   //   お気に入りチーム選択機能
   const choiceTeam = (teamId) => {

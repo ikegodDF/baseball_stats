@@ -8,7 +8,7 @@ import "./Result.css";
 
 export const Result = () => {
   const location = useLocation();
-  const { selectedDays, from } = location.state || {};
+  const { selectedDays, selectedTeamId } = location.state || {};
   const [gameResults, setGameResults] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +49,21 @@ export const Result = () => {
     },
   ];
 
+  const teamNum = {
+    1: "g",
+    2: "t",
+    3: "d",
+    4: "c",
+    5: "s",
+    6: "db",
+    7: "h",
+    8: "l",
+    9: "m",
+    10: "b",
+    11: "f",
+    12: "e",
+  };
+
   useEffect(() => {
     // バックエンドAPIを呼び出す処理（現在はモックデータを使用）
     const fetchGameResults = async () => {
@@ -67,7 +82,26 @@ export const Result = () => {
 
         // モックデータを使用（実際は上記のAPIレスポンス）
         await new Promise((resolve) => setTimeout(resolve, 1000)); // ローディング演出
-        setGameResults(mockGameResults);
+
+        const response = await fetch("http://localhost:3000/api/game_results");
+        const data = await response.json();
+        console.log(data);
+
+        const gameResults = selectedDays.map((date) => {
+          const year = String(date.getFullYear());
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = month + String(date.getDate()).padStart(2, "0");
+          const team = teamNum[selectedTeamId];
+          console.log(year, month, day, team);
+          const game = data[year][month][day][team];
+          if (!game) return null;
+          return {
+            day: date.toLocaleDateString(),
+            score: game.score,
+            homeoraray: game.fora,
+          };
+        });
+        setGameResults(gameResults);
       } catch (error) {
         console.error("試合結果の取得に失敗しました:", error);
         setGameResults([]);
@@ -120,32 +154,16 @@ export const Result = () => {
                         <thead>
                           <tr>
                             <th>日付</th>
-                            <th>ホーム</th>
                             <th>スコア</th>
-                            <th>アウェイ</th>
-                            <th>球場</th>
-                            <th>観客数</th>
-                            <th>結果</th>
+                            <th>ホームorアウェイ</th>
                           </tr>
                         </thead>
                         <tbody>
                           {gameResults.map((game) => (
-                            <tr key={game.id}>
-                              <td>{game.date}</td>
-                              <td>{game.homeTeam}</td>
-                              <td>
-                                {game.homeScore} - {game.awayScore}
-                              </td>
-                              <td>{game.awayTeam}</td>
-                              <td>{game.stadium}</td>
-                              <td>{game.attendance.toLocaleString()}人</td>
-                              <td
-                                className={`result-${
-                                  game.result === "勝" ? "win" : "lose"
-                                }`}
-                              >
-                                {game.result}
-                              </td>
+                            <tr key={game.day}>
+                              <td>{game.day}</td>
+                              <td>{game.score}</td>
+                              <td>{game.homeoraray}</td>
                             </tr>
                           ))}
                         </tbody>

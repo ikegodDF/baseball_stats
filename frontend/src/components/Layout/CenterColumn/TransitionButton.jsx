@@ -1,16 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelectedDays } from "../../../contexts/SelectedDaysContext";
+import { useSelectedTeam } from "../../../contexts/SelectedTeamContext";
 import "./TransitionButton.css";
 
 export const TransitionButton = () => {
   const navigate = useNavigate();
   const { selectedDays } = useSelectedDays();
+  const { selectedTeamId } = useSelectedTeam();
 
   const handleResultClick = () => {
     navigate("/result", {
       state: {
         selectedDays: selectedDays,
+        selectedTeamId: selectedTeamId,
         from: "calendar",
       },
     });
