@@ -1,3 +1,13 @@
+// このファイルはNPB公式サイトから各チームの試合日程をスクレイピングし、
+// チームごとの試合日リスト（gamedays.json）を生成するスクリプトです。
+// 主な処理：puppeteerでページ取得→日程抽出→チームごとに日付をまとめてjson出力
+//
+// 例：
+// - NPB公式のスケジュールページにアクセス
+// - 各試合の開催日・対戦カードを抽出
+// - チームごとに「いつ試合があるか」を整理し、gamedays.jsonに保存
+//
+
 import puppeteer from "puppeteer";
 import fs from "fs/promises";
 

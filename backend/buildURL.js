@@ -1,3 +1,13 @@
+// このファイルはNPB公式サイトから各試合の詳細ページURLやスコア情報をスクレイピングし、
+// 年・月ごとにまとめてurl.jsonに保存するスクリプトです。
+// 主な処理：puppeteerでページ取得→試合ごとのURL・スコア抽出→json出力
+//
+// 例：
+// - NPB公式のスケジュールページにアクセス
+// - 各試合の詳細ページURL・スコア・対戦カードを抽出
+// - 年・月ごとにまとめてurl.jsonに保存
+//
+
 import puppeteer from "puppeteer";
 import fs from "fs/promises";
 
