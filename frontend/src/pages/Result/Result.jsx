@@ -70,35 +70,28 @@ export const Result = () => {
       setLoading(true);
 
       try {
-        // 実際のバックエンドAPI呼び出し
-        // const response = await fetch('/api/game-results', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify({ selectedDays })
-        // });
-        // const data = await response.json();
+        const response = await fetch("http://localhost:3000/api/game_results", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            selectedDays,
+            selectedTeamName: teamNum[selectedTeamId],
+          }),
+        });
 
-        // モックデータを使用（実際は上記のAPIレスポンス）
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // ローディング演出
+        if (!response.ok) {
+          throw new Error("HTTP error! status: " + response.status);
+        }
 
-        const response = await fetch("http://localhost:3000/api/game_results");
         const data = await response.json();
-        console.log(data);
+        console.log("API Response:", data);
 
         const gameResults = selectedDays.map((date) => {
-          const year = String(date.getFullYear());
-          const month = String(date.getMonth() + 1).padStart(2, "0");
-          const day = month + String(date.getDate()).padStart(2, "0");
-          const team = teamNum[selectedTeamId];
-          console.log(year, month, day, team);
-          const game = data[year][month][day][team];
-          if (!game) return null;
           return {
             day: date.toLocaleDateString(),
-            score: game.score,
-            homeoraray: game.fora,
+            stats: data,
           };
         });
         setGameResults(gameResults);
@@ -115,7 +108,7 @@ export const Result = () => {
     } else {
       setLoading(false);
     }
-  }, [selectedDays]);
+  }, [selectedDays, selectedTeamId]);
 
   return (
     <div className="result-container">
@@ -124,7 +117,7 @@ export const Result = () => {
         <LeftColumn />
         <CenterColumn>
           <div className="result-content">
-            <h2>試合結果</h2>
+            <h2>個人成績</h2>
 
             {!selectedDays || selectedDays.length === 0 ? (
               <div className="no-selection">
@@ -148,26 +141,83 @@ export const Result = () => {
                   </div>
                 ) : (
                   <div className="game-results-table">
-                    <h3>試合結果一覧</h3>
+                    <h3>累積統計データ</h3>
                     {gameResults.length > 0 ? (
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>日付</th>
-                            <th>スコア</th>
-                            <th>ホームorアウェイ</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {gameResults.map((game) => (
-                            <tr key={game.day}>
-                              <td>{game.day}</td>
-                              <td>{game.score}</td>
-                              <td>{game.homeoraray}</td>
+                      <div>
+                        <h4>打者統計</h4>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>選手名</th>
+                              <th>ポジション</th>
+                              <th>打数</th>
+                              <th>得点</th>
+                              <th>安打</th>
+                              <th>打点</th>
+                              <th>盗塁</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {Object.entries(
+                              gameResults[0]?.stats?.hitter || {}
+                            ).map(([name, stats]) => (
+                              <tr key={name}>
+                                <td>{name}</td>
+                                <td>{stats.position}</td>
+                                <td>{stats.atBats}</td>
+                                <td>{stats.runs}</td>
+                                <td>{stats.hits}</td>
+                                <td>{stats.rbi}</td>
+                                <td>{stats.steals}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+
+                        <h4>投手統計</h4>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>選手名</th>
+                              <th>投球数</th>
+                              <th>投球回</th>
+                              <th>被安打</th>
+                              <th>被本塁打</th>
+                              <th>四球</th>
+                              <th>死球</th>
+                              <th>奪三振</th>
+                              <th>失点</th>
+                              <th>自責点</th>
+                              <th>勝</th>
+                              <th>負</th>
+                              <th>セーブ</th>
+                              <th>ホールド</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {Object.entries(
+                              gameResults[0]?.stats?.pitcher || {}
+                            ).map(([name, stats]) => (
+                              <tr key={name}>
+                                <td>{name}</td>
+                                <td>{stats.pitches}</td>
+                                <td>{stats.innings}</td>
+                                <td>{stats.hits}</td>
+                                <td>{stats.homeruns}</td>
+                                <td>{stats.walks}</td>
+                                <td>{stats.hbp}</td>
+                                <td>{stats.strikeouts}</td>
+                                <td>{stats.r}</td>
+                                <td>{stats.er}</td>
+                                <td>{stats.win}</td>
+                                <td>{stats.loss}</td>
+                                <td>{stats.save}</td>
+                                <td>{stats.hold}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     ) : (
                       <p>該当する試合結果が見つかりませんでした</p>
                     )}

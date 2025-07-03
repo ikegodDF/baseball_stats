@@ -28,8 +28,8 @@ export const getGameResults = async (req, res) => {
   // }
 
   try {
-    const { selectedDays, selectedTeamId } = req.body;
-    if (!selectedDays || !selectedTeamId) {
+    const { selectedDays, selectedTeamName } = req.body;
+    if (!selectedDays || !selectedTeamName) {
       return res.status(400).json({
         error: "selectedDaysとselectedTeamIdが必要です",
       });
@@ -220,7 +220,7 @@ export const getGameResults = async (req, res) => {
     const cumulativeStats = { hitter: {}, pitcher: {} };
 
     selectedDays.forEach(async (date) => {
-      const { url, homeoraway } = await accessURL(selectedTeamId, date);
+      const { url, homeoraway } = await accessURL(selectedTeamName, date);
       const browserData = await tryUrl(url);
       if (!browserData) return;
 
