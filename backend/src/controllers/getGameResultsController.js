@@ -29,24 +29,33 @@ export const getGameResults = async (req, res) => {
 
   try {
     const { selectedDays, selectedTeamName } = req.body;
+    console.log("Received data:", { selectedDays, selectedTeamName });
+
     if (!selectedDays || !selectedTeamName) {
       return res.status(400).json({
-        error: "selectedDaysとselectedTeamIdが必要です",
+        error: "selectedDaysとselectedTeamNameが必要です",
       });
     }
+
+    // data/url.jsonの絶対パスを取得
+    const filePath = path.resolve(__dirname, "../../../data/url.json");
+    console.log("URL file path:", filePath);
 
     const accessURL = async (teamName, date) => {
       const year = String(date.getFullYear());
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = month + String(date.getDate()).padStart(2, "0");
+      console.log("Accessing URL for:", { year, month, day, teamName });
 
-      const urls = JSON.parse(await fs.readFile("url.json", "utf-8"));
+      const urls = JSON.parse(await fs.readFile(filePath, "utf-8"));
       const url = `https://npb.jp${urls[year][month][day][teamName]["href"]}box.html`;
       const homeoraway = urls[year][month][day][teamName]["fora"];
+      console.log("Generated URL:", url);
       return { url, homeoraway };
     };
 
     const tryUrl = async (url) => {
+      console.log("Trying URL:", url);
       const browser = await puppeteer.launch({ headless: true });
       const page = await browser.newPage();
       try {
@@ -55,15 +64,18 @@ export const getGameResults = async (req, res) => {
           timeout: 5000,
         });
         if (res.status() === 200) {
+          console.log("URL accessed successfully");
           return { browser, page };
         }
       } catch (error) {
+        console.log("URL access failed:", error.message);
         await browser.close();
         return false;
       }
     };
 
     const getTable = async (page, homeoraway) => {
+      console.log("Getting table for:", homeoraway);
       if (homeoraway === "home") {
         await page.waitForSelector("#tablefix_b_b");
         const hitterStatsRaw = await page.$$eval(
@@ -83,6 +95,10 @@ export const getGameResults = async (req, res) => {
               return Array.from(cells).map((cell) => cell.innerText.trim());
             })
         );
+        console.log("Home stats found:", {
+          hitterCount: hitterStatsRaw.length,
+          pitcherCount: pitcherStatsRaw.length,
+        });
         return { hitterStatsRaw, pitcherStatsRaw };
       } else if (homeoraway === "away") {
         await page.waitForSelector("#tablefix_t_b");
@@ -103,6 +119,10 @@ export const getGameResults = async (req, res) => {
               return Array.from(cells).map((cell) => cell.innerText.trim());
             })
         );
+        console.log("Away stats found:", {
+          hitterCount: hitterStatsRaw.length,
+          pitcherCount: pitcherStatsRaw.length,
+        });
         return { hitterStatsRaw, pitcherStatsRaw };
       }
     };
@@ -206,6 +226,7 @@ export const getGameResults = async (req, res) => {
         p.hold += pitcher.hold;
       }
     };
+
     const convertRowToPlayer = (cumulative, { hitter, pitcher }) => {
       for (const row of hitter) {
         const player = convertRowToHitter(row);
@@ -219,23 +240,35 @@ export const getGameResults = async (req, res) => {
 
     const cumulativeStats = { hitter: {}, pitcher: {} };
 
-    selectedDays.forEach(async (date) => {
-      const { url, homeoraway } = await accessURL(selectedTeamName, date);
-      const browserData = await tryUrl(url);
-      if (!browserData) return;
+    // JSONで送信された日付文字列をDateオブジェクトに変換
+    const selectedDates = selectedDays.map((dateStr) => new Date(dateStr));
+    console.log("Processing dates:", selectedDates);
 
-      const { browser, page } = browserData;
-      const { hitterStatsRaw, pitcherStatsRaw } = await getTable(
-        page,
-        homeoraway
-      );
-      convertRowToPlayer(cumulativeStats, {
-        hitter: hitterStatsRaw,
-        pitcher: pitcherStatsRaw,
-      });
-      await browser.close();
-    });
+    for (const date of selectedDates) {
+      try {
+        const { url, homeoraway } = await accessURL(selectedTeamName, date);
+        const browserData = await tryUrl(url);
+        if (!browserData) {
+          console.log("Skipping date due to URL access failure:", date);
+          continue;
+        }
 
+        const { browser, page } = browserData;
+        const { hitterStatsRaw, pitcherStatsRaw } = await getTable(
+          page,
+          homeoraway
+        );
+        convertRowToPlayer(cumulativeStats, {
+          hitter: hitterStatsRaw,
+          pitcher: pitcherStatsRaw,
+        });
+        await browser.close();
+      } catch (error) {
+        console.log("Error processing date:", date, error.message);
+      }
+    }
+
+    console.log("Final cumulative stats:", cumulativeStats);
     res.json(cumulativeStats);
   } catch (error) {
     console.log("API error", error);

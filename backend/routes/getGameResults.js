@@ -15,4 +15,7 @@ const router = express.Router();
 // GET /api/game_results
 router.get("/game_results", getGameResults);
 
+// POST /api/game_results
+router.post("/game_results", getGameResults);
+
 export default router;
