@@ -12,6 +12,7 @@ export const useGameResults = () => {
 };
 
 export const GameResultsProvider = ({ children }) => {
+  const { selectedDays } = useSelectedDays();
   const [gameResults, setGameResults] = useState([]);
 
   const fetchGameResults = async () => {
